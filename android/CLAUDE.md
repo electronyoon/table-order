@@ -5,6 +5,7 @@ Kotlin, Jetpack Compose, 단일 앱. 태블릿(PRIMARY)/폰(BACKUP)은 같은 �
 ## 빌드/테스트
 
 - `./gradlew :app:assembleDebug` — Android SDK 필요 (`ANDROID_HOME` 또는 `local.properties`의 `sdk.dir`)
+- macOS에서 SDK 없을 때: `brew install --cask android-commandlinetools` → `sdkmanager --licenses` 동의 → `sdkmanager "platform-tools" "platforms;android-37.1" "build-tools;37.0.0"` → `android/local.properties`에 `sdk.dir=/opt/homebrew/share/android-commandlinetools` 작성 (이 파일은 `.gitignore` 처리됨, 커밋 금지)
 - AGP 9+ **built-in Kotlin**을 사용한다. `org.jetbrains.kotlin.android` 플러그인은 적용하지 않는다 (적용 시 빌드 실패). Compose 컴파일러는 `org.jetbrains.kotlin.plugin.compose`로 별도 적용한다. 참고: https://kotl.in/gradle/agp-built-in-kotlin
 - 버전은 `gradle/libs.versions.toml`(Version Catalog)에서 관리한다.
 
