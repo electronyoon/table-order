@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: table-order-backend
+  datasource:
+    url: jdbc:postgresql://localhost:5432/table_order
+    username: table_order
+    password: table_order
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
