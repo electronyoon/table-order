@@ -16,7 +16,7 @@ Kotlin, Jetpack Compose, 단일 앱. 태블릿(PRIMARY)/폰(BACKUP)은 같은 �
 ## 코드 컨벤션
 
 - 패키지 루트: `com.electronyoon.tableorder`
-- minSdk 26 / compileSdk·targetSdk 36
+- minSdk 26 / compileSdk·targetSdk 37 (androidx 최신 라이브러리가 API 37 컴파일을 요구함)
 
 ## 금지사항
 

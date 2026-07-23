@@ -11,12 +11,12 @@ if (file("google-services.json").exists()) {
 
 android {
     namespace = "com.electronyoon.tableorder"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.electronyoon.tableorder"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName = "0.1"
     }
