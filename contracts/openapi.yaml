@@ -484,6 +484,13 @@ components:
         idempotencyKey:
           type: string
           format: uuid
+        tableId:
+          type: integer
+          format: int64
+          nullable: true
+          description: |
+            POST /t/{qrToken}/orders(소비자)에서는 무시된다 — 테이블은 경로의 qrToken으로 결정됨.
+            POST /admin/orders(COUNTER)에서는 필수 — 어느 테이블의 구두 주문인지 지정해야 한다.
         items:
           type: array
           minItems: 1
