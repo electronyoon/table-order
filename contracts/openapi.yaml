@@ -172,7 +172,7 @@ paths:
   /admin/order-items/{orderItemId}/cancel:
     post:
       tags: [admin]
-      summary: 품목 취소 + 당일 품절 처리 (한 트랜잭션)
+      summary: 품목 취소 (변심취소 또는 재고부족취소)
       operationId: cancelOrderItem
       security: [{ bearerAuth: [] }]
       parameters:
@@ -182,9 +182,23 @@ paths:
           schema:
             type: integer
             format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [markSoldOut]
+              properties:
+                markSoldOut:
+                  type: boolean
+                  description: |
+                    true = 재고부족취소: order_item 취소와 menu.sold_out_date 당일 설정을
+                    한 트랜잭션으로 처리한다.
+                    false = 변심취소: order_item만 취소하고 품절 처리는 하지 않는다.
       responses:
         "200":
-          description: 취소 및 품절 처리됨
+          description: 취소됨 (markSoldOut 값에 따라 품절 처리 여부가 결정됨)
           content:
             application/json:
               schema:
