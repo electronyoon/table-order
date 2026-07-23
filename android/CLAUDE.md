@@ -1,5 +1,7 @@
 # android
 
+> 구현 전 요구사항은 [REQUIREMENTS.md](REQUIREMENTS.md) 참고 — 취소 제스처(탭/길게누르기), 반응형 레이아웃(태블릿/폰) 명세.
+
 Kotlin, Jetpack Compose, 단일 앱. 태블릿(PRIMARY)/폰(BACKUP)은 같은 앱을 설치하고 런타임에 `device.role`만 다르게 설정한다 (별도 빌드 변형 아님).
 
 ## 빌드/테스트
