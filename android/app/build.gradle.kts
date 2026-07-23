@@ -50,5 +50,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
 
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.messaging.ktx)
+    implementation(libs.firebase.messaging)
 }
