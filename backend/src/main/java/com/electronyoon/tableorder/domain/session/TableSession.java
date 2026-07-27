@@ -15,12 +15,10 @@ import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "table_session")
 @Getter
-@Setter
 @NoArgsConstructor
 public class TableSession {
 
@@ -44,9 +42,9 @@ public class TableSession {
 
     public static TableSession open(StoreTable table) {
         TableSession session = new TableSession();
-        session.setTable(table);
-        session.setStatus(SessionStatus.OPEN);
-        session.setOpenedAt(OffsetDateTime.now());
+        session.table = table;
+        session.status = SessionStatus.OPEN;
+        session.openedAt = OffsetDateTime.now();
         return session;
     }
 

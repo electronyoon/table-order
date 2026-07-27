@@ -21,12 +21,10 @@ import java.util.List;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "orders")
 @Getter
-@Setter
 @NoArgsConstructor
 public class Order {
 
@@ -58,16 +56,16 @@ public class Order {
 
     public static Order create(TableSession session, OrderSource source, UUID idempotencyKey) {
         Order order = new Order();
-        order.setSession(session);
-        order.setSource(source);
-        order.setStatus(OrderStatus.RECEIVED);
-        order.setIdempotencyKey(idempotencyKey);
-        order.setCreatedAt(OffsetDateTime.now());
+        order.session = session;
+        order.source = source;
+        order.status = OrderStatus.RECEIVED;
+        order.idempotencyKey = idempotencyKey;
+        order.createdAt = OffsetDateTime.now();
         return order;
     }
 
     public void addItem(OrderItem item) {
-        item.setOrder(this);
+        item.assignOrder(this);
         this.items.add(item);
     }
 

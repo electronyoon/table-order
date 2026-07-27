@@ -15,7 +15,6 @@ import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -27,7 +26,6 @@ import org.hibernate.type.SqlTypes;
 @Entity
 @Table(name = "outbox_event")
 @Getter
-@Setter
 @NoArgsConstructor
 public class OutboxEvent {
 
@@ -56,10 +54,10 @@ public class OutboxEvent {
 
     public static OutboxEvent create(String type, String payloadJson) {
         OutboxEvent event = new OutboxEvent();
-        event.setType(type);
-        event.setPayload(payloadJson);
-        event.setStatus(OutboxEventStatus.NEW);
-        event.setCreatedAt(OffsetDateTime.now());
+        event.type = type;
+        event.payload = payloadJson;
+        event.status = OutboxEventStatus.NEW;
+        event.createdAt = OffsetDateTime.now();
         return event;
     }
 }

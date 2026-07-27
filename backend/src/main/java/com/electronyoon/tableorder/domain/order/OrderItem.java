@@ -14,12 +14,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "order_item")
 @Getter
-@Setter
 @NoArgsConstructor
 public class OrderItem {
 
@@ -54,13 +52,18 @@ public class OrderItem {
 
     public static OrderItem fromMenu(Menu menu, int quantity, String note) {
         OrderItem item = new OrderItem();
-        item.setMenu(menu);
-        item.setMenuName(menu.getName());
-        item.setUnitPrice(menu.getPrice());
-        item.setQuantity(quantity);
-        item.setNote(note);
-        item.setStatus(OrderItemStatus.ACTIVE);
+        item.menu = menu;
+        item.menuName = menu.getName();
+        item.unitPrice = menu.getPrice();
+        item.quantity = quantity;
+        item.note = note;
+        item.status = OrderItemStatus.ACTIVE;
         return item;
+    }
+
+    /** Order.addItem에서만 호출한다 (양방향 연관관계 설정, 패키지 내부용). */
+    void assignOrder(Order order) {
+        this.order = order;
     }
 
     public void cancel() {
