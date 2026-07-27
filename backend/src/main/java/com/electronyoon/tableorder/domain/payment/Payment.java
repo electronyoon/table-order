@@ -1,6 +1,5 @@
 package com.electronyoon.tableorder.domain.payment;
 
-import com.electronyoon.tableorder.domain.order.Order;
 import com.electronyoon.tableorder.domain.session.TableSession;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,9 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * PG 연동 이전까지는 엔티티만 존재하고 API/로직은 없다 (design.md §4/§9 — PG 도입은
- * 실사용 이후 별도 단계). session_id / order_id 중 정확히 하나만 채워진다
- * (DB CHECK 제약 ck_payment_session_xor_order).
+ * 카운터 후불 정산 결제. 세션 CLOSE 시 세션 단위로 1건 기록한다 (design.md §4 — 선불/PG는
+ * v0.3에서 스코프 제외). 결제는 세션 전속이므로 session은 항상 채워진다.
  */
 @Entity
 @Table(name = "payment")
@@ -33,12 +31,8 @@ public class Payment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "session_id")
+    @JoinColumn(name = "session_id", nullable = false)
     private TableSession session;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
-    private Order order;
 
     @Column(nullable = false, length = 20)
     private String method;
@@ -48,12 +42,6 @@ public class Payment {
 
     @Column(nullable = false)
     private int amount;
-
-    @Column(name = "pg_provider", length = 50)
-    private String pgProvider;
-
-    @Column(name = "pg_tid", length = 100)
-    private String pgTid;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
