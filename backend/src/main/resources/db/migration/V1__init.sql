@@ -74,21 +74,3 @@ CREATE TABLE payment (
         (session_id IS NULL AND order_id IS NOT NULL)
     )
 );
-
-CREATE TABLE device (
-    id            BIGSERIAL PRIMARY KEY,
-    name          VARCHAR(100) NOT NULL,
-    role          VARCHAR(10) NOT NULL CHECK (role IN ('PRIMARY', 'BACKUP')),
-    fcm_token     VARCHAR(255) NOT NULL,
-    last_seen_at  TIMESTAMPTZ
-);
-
-CREATE TABLE outbox_event (
-    id                  BIGSERIAL PRIMARY KEY,
-    type                VARCHAR(50) NOT NULL,
-    payload             JSONB NOT NULL,
-    status              VARCHAR(10) NOT NULL CHECK (status IN ('NEW', 'SENT', 'ACKED')),
-    -- ACK는 가게 단위: 어느 기기든 하나가 확인하면 완료
-    acked_by_device_id  BIGINT REFERENCES device (id),
-    created_at          TIMESTAMPTZ NOT NULL DEFAULT now()
-);
