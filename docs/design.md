@@ -24,8 +24,9 @@ v0.2 변경: 자동 접수, 품목 취소 = 당일 품절 처리, 대기열 2버
 ```
 store_table ──< table_session ──< orders ──< order_item >── menu >── menu_category
                      │                │
-                     └──< payment >───┘     outbox_event    device (수신 기기)
+                     └──< payment >───┘     outbox_event*   device*(수신 기기)
 ```
+\* `outbox_event` / `device`는 알림 발송(§5, §6-2) 설계를 위한 계획된(planned) 테이블이다. Phase 1(현재)에는 스키마·엔티티에 포함하지 않으며, Phase 2 안드로이드 앱 알림 구현 시 별도 마이그레이션으로 도입한다(§9).
 
 ### store_table
 | 컬럼 | 설명 |
@@ -71,14 +72,14 @@ store_table ──< table_session ──< orders ──< order_item >── menu
 
 ### payment — 세션 후불 정산 (session_id NOT NULL, method, status, amount)
 
-### device
+### device *(planned — Phase 2 안드로이드 앱 알림 구현 시 도입, 현재 스키마에 없음)*
 | 컬럼 | 설명 |
 |---|---|
 | id, name | "주방 태블릿", "엄마 폰" |
 | role | `PRIMARY` / `BACKUP` |
 | fcm_token, last_seen_at | |
 
-### outbox_event
+### outbox_event *(planned — Phase 2 안드로이드 앱 알림 구현 시 도입, 현재 스키마에 없음)*
 | 컬럼 | 설명 |
 |---|---|
 | id, type, payload, created_at | |
@@ -150,7 +151,7 @@ store_table ──< table_session ──< orders ──< order_item >── menu
 ## 6. 주문 유실 방지 (v0.1 유지 + 보강)
 
 1. **생성**: PWA가 UUID 생성 → POST, 200 전까지 완료 화면 없음, 재시도 시 UNIQUE 충돌이면 기존 주문 반환.
-2. **저장과 알림 분리**: 주문 저장 + outbox_event를 한 트랜잭션 → 스케줄러가 FCM 발송(모든 device 대상).
+2. **저장과 알림 분리** *(planned, Phase 2)*: 주문 저장 + outbox_event를 한 트랜잭션 → 스케줄러가 FCM 발송(모든 device 대상).
 3. **수신 보장**: 기기 표시 시 ACK(가게 단위) + 폴링 백업 + 60초 미ACK 시 폰 에스컬레이션.
 4. **복구**: 앱 시작/재접속 시 `status=RECEIVED` 주문 전체 재조회 (ACK 여부와 무관하게 대기열은 항상 서버가 원본).
 
@@ -190,7 +191,7 @@ POST  /admin/menus/{id}/restore        # 품절 해제
 POST  /admin/orders                    # 사장님 직접 입력 (source=COUNTER)
 POST  /admin/sessions/{id}/close       # 정산
 POST  /admin/busy-mode                 # 바쁨 모드 on/off
-POST  /admin/devices                   # 기기 등록 (FCM 토큰, role)
+POST  /admin/devices                   # 기기 등록 (FCM 토큰, role) — planned, Phase 2
 ```
 
 ---
@@ -198,7 +199,7 @@ POST  /admin/devices                   # 기기 등록 (FCM 토큰, role)
 ## 9. 구현 순서
 
 1. 스키마 + Spring Boot 도메인/API (COUNTER 입력 → 대기열 → 완료/취소·품절까지)
-2. Android 앱: 대기열 + 2버튼 + 취소 모달 + 알림음 + 기기 role → **실사용 시작**
+2. Android 앱: 대기열 + 2버튼 + 취소 모달 + 알림음 + 기기 role (`device`/`outbox_event` 스키마 도입) → **실사용 시작**
 3. 사장님 폰 BACKUP 모드 (에스컬레이션 알람)
 4. PWA 메뉴판 + QR 주문 (품절 표시 포함)
 5. 바쁨 모드 / 정산 화면

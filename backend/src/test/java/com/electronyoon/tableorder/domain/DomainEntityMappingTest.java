@@ -4,9 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.electronyoon.tableorder.TestcontainersConfiguration;
-import com.electronyoon.tableorder.domain.device.Device;
-import com.electronyoon.tableorder.domain.device.DeviceRepository;
-import com.electronyoon.tableorder.domain.device.DeviceRole;
 import com.electronyoon.tableorder.domain.menu.Menu;
 import com.electronyoon.tableorder.domain.menu.MenuCategory;
 import com.electronyoon.tableorder.domain.menu.MenuCategoryRepository;
@@ -46,8 +43,6 @@ class DomainEntityMappingTest {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
-    private DeviceRepository deviceRepository;
-    @Autowired
     private PaymentRepository paymentRepository;
 
     @Test
@@ -81,13 +76,6 @@ class DomainEntityMappingTest {
         assertThat(order.getItems()).hasSize(1);
         assertThat(order.getItems().get(0).getMenuName()).isEqualTo("제육볶음");
         assertThat(order.getItems().get(0).getUnitPrice()).isEqualTo(9000);
-
-        Device device = new Device();
-        device.setName("주방 태블릿");
-        device.setRole(DeviceRole.PRIMARY);
-        device.setFcmToken("token-abc");
-        device = deviceRepository.saveAndFlush(device);
-        assertThat(device.getId()).isNotNull();
 
         Payment payment = new Payment();
         payment.setSession(session);
