@@ -1,10 +1,13 @@
+server:
+  port: ${PORT:8080}
+
 spring:
   application:
     name: table-order-backend
   datasource:
-    url: jdbc:postgresql://localhost:5432/table_order
-    username: table_order
-    password: table_order
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:table_order}
+    username: ${PGUSER:table_order}
+    password: ${PGPASSWORD:table_order}
   jpa:
     hibernate:
       ddl-auto: validate

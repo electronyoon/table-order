@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.bundling.Jar
+
 plugins {
     java
     id("org.springframework.boot") version "4.0.7"
@@ -43,4 +45,9 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+// bootJar만 build/libs에 남기고 plain jar는 만들지 않는다 (Dockerfile에서 파일명 고정 없이 복사하기 위함)
+tasks.named<Jar>("jar") {
+    enabled = false
 }
