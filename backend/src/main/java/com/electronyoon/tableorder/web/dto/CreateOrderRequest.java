@@ -8,6 +8,7 @@ import java.util.UUID;
 
 public record CreateOrderRequest(
         @NotNull UUID idempotencyKey,
+        Long tableId,
         @NotEmpty @Valid List<CreateOrderItemRequest> items
 ) {
 }

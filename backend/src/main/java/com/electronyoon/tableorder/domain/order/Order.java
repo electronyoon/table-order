@@ -50,6 +50,10 @@ public class Order {
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 
+    /** ACK는 가게 단위(design.md §5) — 한 번이라도 화면에 표시되면 끝. V2 마이그레이션. */
+    @Column(name = "acked_at")
+    private OffsetDateTime ackedAt;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = false, fetch = FetchType.LAZY)
     @OrderBy("id ASC")
     private List<OrderItem> items = new ArrayList<>();

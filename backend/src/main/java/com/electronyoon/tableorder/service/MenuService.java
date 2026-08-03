@@ -1,5 +1,6 @@
 package com.electronyoon.tableorder.service;
 
+import com.electronyoon.tableorder.common.ApiException;
 import com.electronyoon.tableorder.common.BusinessDayCalculator;
 import com.electronyoon.tableorder.domain.menu.Menu;
 import com.electronyoon.tableorder.domain.menu.MenuCategoryRepository;
@@ -35,26 +36,23 @@ public class MenuService {
                 .toList();
 
         List<MenuDto> menus = menuRepository.findAllByOrderBySortOrderAsc().stream()
-                .map(this::toDto)
+                .map(MenuDto::from)
                 .toList();
 
         return new MenuBoardResponse(categories, menus);
     }
 
-    private MenuDto toDto(Menu menu) {
-        return new MenuDto(
-                menu.getId(),
-                menu.getCategory().getId(),
-                menu.getName(),
-                menu.getPrice(),
-                menu.getSortOrder(),
-                menu.isSelfService(),
-                menu.getSoldOutDate()
-        );
-    }
-
     /** 품절 판정: sold_out_date == 오늘 영업일. */
     public boolean isSoldOut(Menu menu) {
         return businessDayCalculator.isSoldOutToday(menu.getSoldOutDate());
+    }
+
+    /** 품절 해제. design.md §2 — 착오 품절 복구용 단일 액션. */
+    @Transactional
+    public Menu restoreMenu(Long menuId) {
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> ApiException.notFound("존재하지 않는 메뉴입니다."));
+        menu.restore();
+        return menu;
     }
 }

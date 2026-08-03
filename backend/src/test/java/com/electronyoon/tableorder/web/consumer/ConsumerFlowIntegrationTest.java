@@ -87,6 +87,7 @@ class ConsumerFlowIntegrationTest {
     void createOrderThenRetryWithSameIdempotencyKeyReturnsSameOrder() {
         CreateOrderRequest request = new CreateOrderRequest(
                 UUID.randomUUID(),
+                null,
                 List.of(new CreateOrderItemRequest(menu.getId(), 2, null))
         );
 
@@ -113,6 +114,7 @@ class ConsumerFlowIntegrationTest {
 
         CreateOrderRequest request = new CreateOrderRequest(
                 UUID.randomUUID(),
+                null,
                 List.of(new CreateOrderItemRequest(menu.getId(), 1, null))
         );
 
@@ -125,6 +127,7 @@ class ConsumerFlowIntegrationTest {
     void getSessionReturnsOrdersAfterOrderCreated() {
         CreateOrderRequest request = new CreateOrderRequest(
                 UUID.randomUUID(),
+                null,
                 List.of(new CreateOrderItemRequest(menu.getId(), 1, null))
         );
         restTemplate.postForEntity("/t/" + table.getQrToken() + "/orders", request, OrderResponse.class);
